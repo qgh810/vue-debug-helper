@@ -1,4 +1,4 @@
-# debug-ball
+# vue-debug-helper
 
 > A Vue.js project
 
