@@ -1,19 +1,24 @@
 <template>
   <div id="app">
-    <DebugBall/>
+    <DebugHelper/>
   </div>
 </template>
 
 <script>
-import DebugBall from './components/debug-ball'
+import DebugHelper from './components/debug-helper'
 
 export default {
   name: 'App',
   components: {
-    DebugBall
+    DebugHelper
   }
 }
 </script>
 
 <style>
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+}
 </style>

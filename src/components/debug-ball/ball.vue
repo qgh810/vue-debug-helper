@@ -1,13 +1,18 @@
 <template>
-  <div
-    class="ball-root"
-    :class="{active: isActive}"
-    :style="rootStyle"
-    @touchstart="onTouchStart"
-    @touchend="onTouchEnd"
-    @touchmove="onTouchMove"
-    >
-    <div class="circular"></div>
+  <div class="ball-root-root">
+    <!-- 球 -->
+    <div
+      class="ball-root"
+      ref="ball"
+      :class="{active: isActive}"
+      :style="rootStyle"
+      @touchstart="onTouchStart"
+      @touchend="onTouchEnd"
+      @touchmove="onTouchMove"
+      >
+      <div class="circular"></div>
+    </div>
+
   </div>
 </template>
 
@@ -98,7 +103,7 @@ export default {
     },
 
     getBallSize () {
-      const {clientWidth, clientHeight} = this.$el
+      const {clientWidth, clientHeight} = this.$refs.ball
       this.size = {width: clientWidth, height: clientHeight}
     },
 
@@ -106,7 +111,7 @@ export default {
       const {width, height} = this.size
       const {width: containerWidth, height: containerHeight} = this.containerSize
 
-      const MIM_LENGTH = 10
+      const MIM_LENGTH = 2
       const minLeft = MIM_LENGTH
       const minTop = MIM_LENGTH
       const maxLeft = containerWidth - MIM_LENGTH - width
@@ -163,7 +168,7 @@ export default {
       const params = {
         position: this.position,
         size: this.size,
-        center: {
+        centerPosition: {
           left: this.position.left + this.size.width / 2,
           top: this.position.top + this.size.height / 2
         }
@@ -175,30 +180,37 @@ export default {
 </script>
 
 <style scoped>
+  .ball-root-root {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 10000000;
+  }
   .ball-root {
     position: absolute;
     width: 13vw;
     height: 13vw;
-    background: #000;
-    opacity: 0.1;
-    box-shadow: 0 0 4vw 2vw rgba(0,0,0,0.1);
-    border-radius: 20%;
+    background: rgba(150,150,150,0.6);
+    opacity: 0.5;
+    border-radius: 2.5vw;
     transition: all ease 0.2s;
+    z-index: 100;
   }
   .ball-root.active {
-    opacity: 0.3;
+    opacity: 0.8;
   }
   .circular {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 70%;
-    height: 70%;
+    width: 60%;
+    height: 60%;
     background: #fff;
-    opacity: 0.9;
     border-radius: 50%;
-    border: 1vw solid rgba(0,0,0,0.5);
+    border: 1vw solid rgba(0,0,0,0.4);
     box-sizing: content-box;
   }
 </style>
