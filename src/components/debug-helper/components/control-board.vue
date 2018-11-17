@@ -10,19 +10,20 @@
     @click="onClick"
     >
     <div class="content-box">
-      <transition name="default-button-fade">
-        <div class="default-button" v-show="!isOpen" :style="defualtButtonStyle"></div>
-      </transition>
       <div class="open-button-box" :style="openButtonBoxStyle">
         <div
           class="open-button"
           v-for="n in 4"
           :key="n"
-          :style="getSlotStyle(n)">
+          :style="getSlotStyle(n)"
+          @click.stop="onButtonClick">
             <slot :name="'button' + n"></slot>
           </div>
       </div>
 
+      <transition name="default-button-fade">
+        <div class="default-button" v-show="!isOpen" :style="defualtButtonStyle"></div>
+      </transition>
     </div>
     </div>
 </template>
@@ -231,6 +232,10 @@ export default {
       this.isOpen && this.close()
     },
 
+    onButtonClick () {
+      this.isOpen && this.close()
+    },
+
     getSlotStyle (index) {
       index = index - 1
       const BTN_POSITION = [
@@ -251,7 +256,7 @@ export default {
 <style scoped>
 .control-board-root {
   position: absolute;
-  background: rgba(150,150,150,0.8);
+  background: #ccc;
   opacity: 0.5;
   border-radius: 2.5vw;
   z-index: 1000000;
@@ -260,6 +265,9 @@ export default {
 }
 .control-board-root.active {
   opacity: 1;
+}
+.control-board-root.open {
+  background: #666;
 }
 
 .content-box {
@@ -310,6 +318,11 @@ export default {
   width: 100%;
   height: 100%;
   transition: transform ease 0.4s;
+  text-align: center;
+  color: #fff;
+  font-size: 3vw;
+  padding: 2vw;
+  box-sizing: border-box;
 }
 
 </style>
