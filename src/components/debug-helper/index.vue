@@ -1,6 +1,11 @@
 <template>
   <div class="debug-helper-root">
-    <ControlBoard/>
+    <ControlBoard>
+      <div class="button" slot="button1">11</div>
+      <div class="button" slot="button2">22</div>
+      <div class="button" slot="button3">33</div>
+      <div class="button" slot="button4">44</div>
+    </ControlBoard>
   </div>
 </template>
 

@@ -2,13 +2,28 @@
   <div
     v-if="mounted"
     class="control-board-root"
-    :class="{active: isActive}"
+    :class="{active: isActive || isOpen, open: isOpen}"
     :style="rootStyle"
     @touchstart="onTouchStart"
     @touchend.stop="onTouchEnd"
     @touchmove="onTouchMove"
     @click="onClick"
     >
+    <div class="content-box">
+      <transition name="default-button-fade">
+        <div class="default-button" v-show="!isOpen" :style="defualtButtonStyle"></div>
+      </transition>
+      <div class="open-button-box" :style="openButtonBoxStyle">
+        <div
+          class="open-button"
+          v-for="n in 4"
+          :key="n"
+          :style="getSlotStyle(n)">
+            <slot :name="'button' + n"></slot>
+          </div>
+      </div>
+
+    </div>
     </div>
 </template>
 
@@ -70,7 +85,23 @@ export default {
         height: this.size.height + 'px',
         left: this.position.left + 'px',
         top: this.position.top + 'px',
-        transitionDuration: (this.canTransition ? 0.3 : 0) + 's'
+        transitionDuration: (this.canTransition ? 0.4 : 0) + 's'
+      }
+    },
+
+    defualtButtonStyle () {
+      const size = this.closeSize.width
+      return {
+        width: size + 'px',
+        height: size + 'px'
+      }
+    },
+
+    openButtonBoxStyle () {
+      const size = this.openSize.width / 3
+      return {
+        width: size + 'px',
+        height: size + 'px'
       }
     }
   },
@@ -199,6 +230,20 @@ export default {
     onOutClick () {
       this.isOpen && this.close()
     },
+
+    getSlotStyle (index) {
+      index = index - 1
+      const BTN_POSITION = [
+        [0, 1],
+        [0, -1],
+        [-1, 0],
+        [1, 0]
+      ]
+      const size = this.isOpen ? this.openSize.width / 3 : 0
+      return {
+        transform: `translate(${BTN_POSITION[index][0] * size}px, ${BTN_POSITION[index][1] * size}px)`
+      }
+    }
   }
 }
 </script>
@@ -206,14 +251,77 @@ export default {
 <style scoped>
 .control-board-root {
   position: absolute;
-  background: rgba(150,150,150,0.6);
+  background: rgba(150,150,150,0.8);
   opacity: 0.5;
   border-radius: 2.5vw;
   z-index: 1000000;
-  transition: all ease 0.3s;
+  transition: all ease 0.54;
+  overflow: hidden;
 }
 .control-board-root.active {
-  opacity: 0.8;
+  opacity: 1;
 }
 
+.content-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.default-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.default-button::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  top: 10%;
+  display: block;
+  width: 80%;
+  height: 80%;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 50%;
+  border: 1.2vw solid rgba(0,0,0,0.4);
+}
+
+.open-button-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all ease 0.5s;
+}
+.open .open-button-box {
+  opacity: 1;
+}
+
+.open-button-box .open-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform ease 0.4s;
+}
+
+</style>
+
+<style scoped>
+.default-button-fade-enter-active {
+  transition: opacity 0.3s;
+}
+.default-button-fade-leave-active {
+  transition: opacity 0s;
+}
+.default-button-fade-enter, .default-button-fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
